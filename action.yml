@@ -1,0 +1,25 @@
+name: 'SOME_COMPANY - Setup Volterra'
+description: 'Sets up Volterra CLI in your GitHub Actions workflow.'
+author: 'SOME_COMPANY, Inc.'
+inputs:
+  cli_config_credential_hostname:
+    description: 'The hostname of a Volterra tenant API instance to place within the server-urls setting in the Volterra CLI configuration file. Defaults to `console.ves.volterra.io`.'
+    default: 'console.ves.volterra.io'
+    required: false
+  cli_config_credential_bundle:
+    description: 'The Credential Bundle for a Volterra tenant instance to pass to the vesctl utility.'
+    required: false
+  vesctl_version:
+    description: 'The version of Volterra CLI (vesctl) to install. E.g. 0.2.24'
+    default: '0.2.24'
+    required: false
+  vesctl_wrapper:
+    description: 'Whether or not to install a wrapper to wrap subsequent calls of the `vesctl` binary and expose its STDOUT, STDERR, and exit code as outputs named `stdout`, `stderr`, and `exitcode` respectively. Defaults to `true`.'
+    default: 'true'
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'terminal'
+  color: 'red'
