@@ -99,7 +99,7 @@ async function installWrapper (pathToCLI, platform, arch) {
 }
 
 // Add credentials to CLI Configuration File
-async function addCredentials (credentialsHostname, credentialsCertificate) {
+async function addCredentials (credentialsHostname, credentialsCertificate, credentialsBundlePassword) {
   // format HCL block
   // eslint-disable
   const conf = `
@@ -131,6 +131,9 @@ p12-bundle: ${process.env.HOME}/vesctl-certificate-bundle.p12`.trim();
 
   core.debug(`Adding credentials to ${credsFile}`);
   await fs.writeFile(credsFile, Buffer.from(credentialsCertificate, 'base64'));
+
+  // Export a new environment variable, so our wrapper can locate the binary
+  core.exportVariable('VES_P12_PASSWORD', credentialsBundlePassword);
 }
 
 function getUrl (version, platform, arch) {
@@ -143,6 +146,7 @@ async function run () {
     const version = core.getInput('vesctl_version');
     const credentialsHostname = core.getInput('cli_config_credential_hostname');
     const credentialsCertBundle = core.getInput('cli_config_credential_bundle');
+    const credentialsBundlePassword = core.getInput('cli_config_credential_bundle_password');
     const wrapper = core.getInput('vesctl_wrapper') === 'true';
 
     // Gather OS details
@@ -169,8 +173,8 @@ async function run () {
     core.addPath(pathToCLI);
 
     // Add credentials to file if they are provided
-    if (credentialsHostname && credentialsCertBundle) {
-      await addCredentials(credentialsHostname, credentialsCertBundle);
+    if (credentialsHostname && credentialsCertBundle && credentialsBundlePassword) {
+      await addCredentials(credentialsHostname, credentialsCertBundle, credentialsBundlePassword);
     }
     return true;
   } catch (error) {

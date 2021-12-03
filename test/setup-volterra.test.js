@@ -37,12 +37,14 @@ describe('Setup Volterra', () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
     const credentialsToken = 'dGVzdGluZw==';
+    const credentialsBundlePassword = 'asdf';
 
     core.getInput = jest
       .fn()
       .mockReturnValueOnce(version)
       .mockReturnValueOnce(credentialsHostname)
-      .mockReturnValueOnce(credentialsToken);
+      .mockReturnValueOnce(credentialsToken)
+      .mockReturnValueOnce(credentialsBundlePassword);
 
     tc.downloadTool = jest
       .fn()
@@ -197,7 +199,8 @@ describe('Setup Volterra', () => {
   test('installs wrapper on linux', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'dGVzdGluZw==';
+    const credentialsBundle = 'dGVzdGluZw==';
+    const credentialsBundlePassword = 'asdf';
     const wrapperPath = path.resolve([__dirname, '..', 'wrapper', 'dist', 'index.js'].join(path.sep));
 
     const ioMv = jest.spyOn(io, 'mv')
@@ -211,7 +214,8 @@ describe('Setup Volterra', () => {
       .fn()
       .mockReturnValueOnce(version)
       .mockReturnValueOnce(credentialsHostname)
-      .mockReturnValueOnce(credentialsToken)
+      .mockReturnValueOnce(credentialsBundle)
+      .mockReturnValueOnce(credentialsBundlePassword)
       .mockReturnValueOnce('true');
 
     tc.downloadTool = jest

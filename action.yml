@@ -9,6 +9,9 @@ inputs:
   cli_config_credential_bundle:
     description: 'The Credential Bundle for a Volterra tenant instance to pass to the vesctl utility.'
     required: false
+  cli_config_credential_bundle_password:
+    description: 'The Credential Bundle Password set when downloading the volterra API Credential bundle.'
+    required: false
   vesctl_version:
     description: 'The version of Volterra CLI (vesctl) to install. E.g. 0.2.24'
     default: '0.2.24'

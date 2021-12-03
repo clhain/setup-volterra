@@ -1,8 +1,8 @@
 # setup-volterra
 
 <p align="left">
-  <a href="https://github.com/hashicorp/setup-volterra/actions"><img alt="Continuous Integration" src="https://github.com/clhain/setup-volterra/workflows/Continuous%20Integration/badge.svg" /></a>
-  <a href="https://github.com/hashicorp/setup-volterra/actions"><img alt="Setup Volterra" src="https://github.com/clhain/setup-volterra/workflows/Setup%20Volterra/badge.svg" /></a>
+  <a href="https://github.com/clhain/setup-volterra/actions"><img alt="Continuous Integration" src="https://github.com/clhain/setup-volterra/workflows/Continuous%20Integration/badge.svg" /></a>
+  <a href="https://github.com/clhain/setup-volterra/actions"><img alt="Setup Volterra" src="https://github.com/clhain/setup-volterra/workflows/Setup%20Volterra/badge.svg" /></a>
 </p>
 
 The `clhain/setup-volterra` action is a JavaScript action that sets up Volterra CLI (vesctl) in your GitHub Actions workflow by:
@@ -41,7 +41,8 @@ Credentials for Vesctl can be configured.
 steps:
 - uses: clhain/setup-volterra@v1
   with:
-    cli_config_credential_bundle: ${{ secrets.TF_API_TOKEN }}
+    cli_config_credential_bundle: ${{ secrets.CRED_BUNDLE_P12_B64 }}
+    cli_config_credential_bundle_password: ${{ secrets.VES_P12_PASSWORD }}
 ```
 
 The wrapper script installation can be skipped.
@@ -74,6 +75,8 @@ The action supports the following inputs:
 - `cli_config_credential_hostname` - (optional) The hostname of the volterra api endpoint. Defaults to `console.ves.volterra.io`.
 
 - `cli_config_credential_bundle` - (optional) A Base64 encoded Volterra API p12 bundle to use when interacting with the api.
+
+- `cli_config_credential_bundle_password` - (optional) The password for the p12 bundle to use when interacting with the api.
 
 - `vesctl_version` - (optional) The version of Vesctl CLI to install. If no version is given, it will default to `latest`.
 
