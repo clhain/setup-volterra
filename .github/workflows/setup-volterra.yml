@@ -1,0 +1,94 @@
+name: 'Setup Volterra'
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  vesctl-versions:
+    name: 'Volterra Versions' 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        vesctl-versions: [0.2.24]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Volterra - ${{ matrix['vesctl-versions'] }}
+      uses: ./
+      with:
+        vesctl_version: ${{ matrix['vesctl-versions'] }}
+    
+    - name: Validate Vesctl Version - ${{ matrix['vesctl-versions'] }}
+      if: ${{ matrix['vesctl-versions'] != 'latest' }}
+      run: vesctl version | grep `sed 's/\./-/g' <<< ${{ matrix['vesctl-versions']}}`
+  
+
+  vesctl-versions-no-wrapper:
+    name: 'Volterra Versions No Wrapper' 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        vesctl-versions: [0.2.24]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Volterra - ${{ matrix['vesctl-versions'] }}
+      uses: ./
+      with:
+        vesctl_version: ${{ matrix['vesctl-versions'] }}
+        vesctl_wrapper: false
+    
+    - name: Validate Vesctl Version - ${{ matrix['vesctl-versions'] }}
+      if: ${{ matrix['vesctl-versions'] != 'latest' }}
+      run: vesctl version | grep `sed 's/\./-/g' <<< ${{ matrix['vesctl-versions']}}`
+
+  vesctl-credentials:
+    name: 'Volterra Credentials' 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      VOLTERRA_AUTH_BUNDLE: 'dGVzdGluZw=='
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Volterra
+      uses: ./
+      with:
+        cli_config_credentials_hostname: 'volterra.example.com'
+        cli_config_credentials_token: ${{ env.VOLTERRA_AUTH_BUNDLE }}
+    
+    - name: Validate Volterra Credentials (Linux & macOS)
+      run: |
+        cat ${HOME}/.vesconfig | grep 'volterra.example.com'
+        cat ${HOME}/vesctl-certificate-bundle.p12 | grep 'testing'
+  
+  vesctl-credentials-none:
+    name: 'Volterra No Credentials' 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Volterra
+      uses: ./
+    
+    - name: Validate Teraform Credentials (Linux & macOS)
+      run: |
+        [[ -f ${HOME}/.vesconfig ]] || exit 0

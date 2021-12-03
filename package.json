@@ -10,7 +10,7 @@
     "url": "https://github.com/clhain/setup-volterra.git"
   },
   "scripts": {
-    "test": "cd wrapper && npm test && cd .. && semistandard --env jest && jest --coverage",
+    "test": "cd wrapper && npm test && cd .. && semistandard --env jest && jest --coverage --verbose true",
     "lint": "cd wrapper && npm run lint && cd .. && semistandard --env jest --fix",
     "build": "cd wrapper && npm run build && cd .. && ncc build index.js --out dist",
     "postinstall": "cd wrapper && npm install",

@@ -35,13 +35,13 @@ steps:
     vesctl_version: 0.2.24
 ```
 
-Credentials for Terraform Cloud (app.terraform.io) can be configured.
+Credentials for Vesctl can be configured.
 
 ```yaml
 steps:
 - uses: clhain/setup-volterra@v1
   with:
-    cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    cli_config_credential_bundle: ${{ secrets.TF_API_TOKEN }}
 ```
 
 The wrapper script installation can be skipped.
@@ -77,14 +77,10 @@ The action supports the following inputs:
 - `cli_config_credentials_token` - (optional) The API token for a Terraform Cloud/Enterprise instance to
    place within the credentials block of the Terraform CLI configuration file.
 
-- `vesctl_version` - (optional) The version of Terraform CLI to install. Instead of a full version string,
-   you can also specify a constraint string (see [Semver Ranges](https://www.npmjs.com/package/semver#ranges)
-   for available range specifications). Examples are: `<0.14.0`, `~0.13.0`, `0.13.x` (all three installing
-   the latest available 0.13 version). Prerelease versions can be specified and a range will stay within the
-   given tag such as `beta` or `rc`. If no version is given, it will default to `latest`.
+- `vesctl_version` - (optional) The version of Vesctl CLI to install. If no version is given, it will default to `latest`.
 
 - `vesctl_wrapper` - (optional) Whether to install a wrapper to wrap subsequent calls of 
-   the `terraform` binary and expose its STDOUT, STDERR, and exit code as outputs
+   the `vesctl` binary and expose its STDOUT, STDERR, and exit code as outputs
    named `stdout`, `stderr`, and `exitcode` respectively. Defaults to `true`.
 
 

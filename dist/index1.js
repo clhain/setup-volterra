@@ -41,7 +41,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __nested_webpack_require_220__(950);
+/******/ 		return __nested_webpack_require_220__(652);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -1030,22 +1030,6 @@ module.exports = __nccwpck_require__(129);
 
 /***/ }),
 
-/***/ 187:
-/***/ (function(module, __unusedexports, __nested_webpack_require_39588__) {
-
-const os = __nested_webpack_require_39588__(87);
-const path = __nested_webpack_require_39588__(622);
-
-module.exports = (() => {
-  // If we're on Windows, then the executable ends with .exe
-  const exeSuffix = os.platform().startsWith('win') ? '.exe' : '';
-
-  return [process.env.TERRAFORM_CLI_PATH, `terraform-bin${exeSuffix}`].join(path.sep);
-})();
-
-
-/***/ }),
-
 /***/ 357:
 /***/ (function(module) {
 
@@ -1054,7 +1038,7 @@ module.exports = __nccwpck_require__(357);
 /***/ }),
 
 /***/ 431:
-/***/ (function(__unusedmodule, exports, __nested_webpack_require_40087__) {
+/***/ (function(__unusedmodule, exports, __nested_webpack_require_39674__) {
 
 "use strict";
 
@@ -1066,8 +1050,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const os = __importStar(__nested_webpack_require_40087__(87));
-const utils_1 = __nested_webpack_require_40087__(82);
+const os = __importStar(__nested_webpack_require_39674__(87));
+const utils_1 = __nested_webpack_require_39674__(82);
 /**
  * Commands
  *
@@ -1140,7 +1124,7 @@ function escapeProperty(s) {
 /***/ }),
 
 /***/ 470:
-/***/ (function(__unusedmodule, exports, __nested_webpack_require_42607__) {
+/***/ (function(__unusedmodule, exports, __nested_webpack_require_42194__) {
 
 "use strict";
 
@@ -1161,11 +1145,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const command_1 = __nested_webpack_require_42607__(431);
-const file_command_1 = __nested_webpack_require_42607__(102);
-const utils_1 = __nested_webpack_require_42607__(82);
-const os = __importStar(__nested_webpack_require_42607__(87));
-const path = __importStar(__nested_webpack_require_42607__(622));
+const command_1 = __nested_webpack_require_42194__(431);
+const file_command_1 = __nested_webpack_require_42194__(102);
+const utils_1 = __nested_webpack_require_42194__(82);
+const os = __importStar(__nested_webpack_require_42194__(87));
+const path = __importStar(__nested_webpack_require_42194__(622));
 /**
  * The code to exit an action
  */
@@ -1398,6 +1382,60 @@ module.exports = __nccwpck_require__(622);
 
 /***/ }),
 
+/***/ 652:
+/***/ (function(__unusedmodule, __unusedexports, __nested_webpack_require_50367__) {
+
+const io = __nested_webpack_require_50367__(1);
+const core = __nested_webpack_require_50367__(470);
+const { exec } = __nested_webpack_require_50367__(986);
+
+const OutputListener = __nested_webpack_require_50367__(831);
+const pathToCLI = __nested_webpack_require_50367__(883);
+
+async function checkVesctl () {
+  // Setting check to `true` will cause `which` to throw if vesctl isn't found
+  const check = true;
+  return io.which(pathToCLI, check);
+}
+
+(async () => {
+  // This will fail if vesctl isn't found, which is what we want
+  await checkVesctl();
+
+  // Create listeners to receive output (in memory) as well
+  const stdout = new OutputListener();
+  const stderr = new OutputListener();
+  const listeners = {
+    stdout: stdout.listener,
+    stderr: stderr.listener
+  };
+
+  // Execute vesctl and capture output
+  const args = process.argv.slice(2);
+  const options = {
+    listeners,
+    ignoreReturnCode: true
+  };
+  const exitCode = await exec(pathToCLI, args, options);
+  core.debug(`Vesctl exited with code ${exitCode}.`);
+  core.debug(`stdout: ${stdout.contents}`);
+  core.debug(`stderr: ${stderr.contents}`);
+  core.debug(`exitcode: ${exitCode}`);
+
+  // Set outputs, result, exitcode, and stderr
+  core.setOutput('stdout', stdout.contents);
+  core.setOutput('stderr', stderr.contents);
+  core.setOutput('exitcode', exitCode.toString(10));
+
+  // A non-zero exitCode is considered an error
+  if (exitCode !== 0) {
+    core.setFailed(`Vesctl exited with code ${exitCode}.`);
+  }
+})();
+
+
+/***/ }),
+
 /***/ 669:
 /***/ (function(module) {
 
@@ -1406,7 +1444,7 @@ module.exports = __nccwpck_require__(669);
 /***/ }),
 
 /***/ 672:
-/***/ (function(__unusedmodule, exports, __nested_webpack_require_50856__) {
+/***/ (function(__unusedmodule, exports, __nested_webpack_require_51968__) {
 
 "use strict";
 
@@ -1421,9 +1459,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const assert_1 = __nested_webpack_require_50856__(357);
-const fs = __nested_webpack_require_50856__(747);
-const path = __nested_webpack_require_50856__(622);
+const assert_1 = __nested_webpack_require_51968__(357);
+const fs = __nested_webpack_require_51968__(747);
+const path = __nested_webpack_require_51968__(622);
 _a = fs.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
 exports.IS_WINDOWS = process.platform === 'win32';
 function exists(fsPath) {
@@ -1657,62 +1695,20 @@ module.exports = OutputListener;
 
 /***/ }),
 
-/***/ 950:
-/***/ (function(__unusedmodule, __unusedexports, __nested_webpack_require_59450__) {
+/***/ 883:
+/***/ (function(module, __unusedexports, __nested_webpack_require_60554__) {
 
-const io = __nested_webpack_require_59450__(1);
-const core = __nested_webpack_require_59450__(470);
-const { exec } = __nested_webpack_require_59450__(986);
+const path = __nested_webpack_require_60554__(622);
 
-const OutputListener = __nested_webpack_require_59450__(831);
-const pathToCLI = __nested_webpack_require_59450__(187);
-
-async function checkTerraform () {
-  // Setting check to `true` will cause `which` to throw if terraform isn't found
-  const check = true;
-  return io.which(pathToCLI, check);
-}
-
-(async () => {
-  // This will fail if Terraform isn't found, which is what we want
-  await checkTerraform();
-
-  // Create listeners to receive output (in memory) as well
-  const stdout = new OutputListener();
-  const stderr = new OutputListener();
-  const listeners = {
-    stdout: stdout.listener,
-    stderr: stderr.listener
-  };
-
-  // Execute terraform and capture output
-  const args = process.argv.slice(2);
-  const options = {
-    listeners,
-    ignoreReturnCode: true
-  };
-  const exitCode = await exec(pathToCLI, args, options);
-  core.debug(`Terraform exited with code ${exitCode}.`);
-  core.debug(`stdout: ${stdout.contents}`);
-  core.debug(`stderr: ${stderr.contents}`);
-  core.debug(`exitcode: ${exitCode}`);
-
-  // Set outputs, result, exitcode, and stderr
-  core.setOutput('stdout', stdout.contents);
-  core.setOutput('stderr', stderr.contents);
-  core.setOutput('exitcode', exitCode.toString(10));
-
-  // A non-zero exitCode is considered an error
-  if (exitCode !== 0) {
-    core.setFailed(`Terraform exited with code ${exitCode}.`);
-  }
+module.exports = (() => {
+  return [process.env.VOLTERRA_CLI_PATH, 'vesctl-bin'].join(path.sep);
 })();
 
 
 /***/ }),
 
 /***/ 986:
-/***/ (function(__unusedmodule, exports, __nested_webpack_require_60988__) {
+/***/ (function(__unusedmodule, exports, __nested_webpack_require_60786__) {
 
 "use strict";
 
@@ -1733,7 +1729,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const tr = __importStar(__nested_webpack_require_60988__(9));
+const tr = __importStar(__nested_webpack_require_60786__(9));
 /**
  * Exec a command.
  * Output will be streamed to the live console.

@@ -11,9 +11,7 @@ const fs = require('fs').promises;
 const io = require('@actions/io');
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
-const nock = require('nock');
 
-const json = require('./index.json');
 const setup = require('../lib/setup-volterra');
 
 // Overwrite defaults
@@ -34,10 +32,10 @@ describe('Setup Volterra', () => {
     process.env.HOME = HOME;
   });
 
-  test('gets specific version and adds token and hostname on linux, amd64', async () => {
+  test('gets specific version and adds certs and hostname on linux, amd64', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
 
     core.getInput = jest
       .fn()
@@ -61,19 +59,21 @@ describe('Setup Volterra', () => {
       .fn()
       .mockReturnValue('amd64');
 
+    const success = await setup();
+    expect(success).toEqual(true);
     // downloaded CLI has been added to path
     expect(core.addPath).toHaveBeenCalled();
-    // expect credentials are in ${HOME}.terraformrc
+    // expect config are in ${HOME}.vesconfig
     const conf = await fs.readFile(`${process.env.HOME}/.vesconfig`, { encoding: 'utf8' });
     expect(conf.indexOf(credentialsHostname)).toBeGreaterThan(-1);
     const creds = await fs.readFile(`${process.env.HOME}/vesctl-certificate-bundle.p12`, { encoding: 'utf8' });
-    expect(creds.indexOf(credentialsToken)).toBeGreaterThan(-1);
+    expect(creds.indexOf('testing')).toBeGreaterThan(-1);
   });
 
   test('fails when specific version cannot be found', async () => {
     const version = '0.9.9';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
 
     core.getInput = jest
       .fn()
@@ -91,7 +91,7 @@ describe('Setup Volterra', () => {
   test('fails when OS is windows', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
 
     core.getInput = jest
       .fn()
@@ -125,7 +125,7 @@ describe('Setup Volterra', () => {
   test('fails when CLI for os and architecture cannot be found', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
 
     core.getInput = jest
       .fn()
@@ -159,7 +159,7 @@ describe('Setup Volterra', () => {
   test('fails when CLI cannot be downloaded', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
 
     core.getInput = jest
       .fn()
@@ -193,7 +193,7 @@ describe('Setup Volterra', () => {
   test('installs wrapper on linux', async () => {
     const version = '0.1.1';
     const credentialsHostname = 'console.ves.volterra.io';
-    const credentialsToken = 'asdfjkl';
+    const credentialsToken = 'dGVzdGluZw==';
     const wrapperPath = path.resolve([__dirname, '..', 'wrapper', 'dist', 'index.js'].join(path.sep));
 
     const ioMv = jest.spyOn(io, 'mv')
@@ -229,5 +229,4 @@ describe('Setup Volterra', () => {
     expect(ioMv).toHaveBeenCalledWith(`file${path.sep}vesctl.linux-amd64`, `file${path.sep}vesctl-bin`);
     expect(ioCp).toHaveBeenCalledWith(wrapperPath, `file${path.sep}vesctl`);
   });
-
 });
