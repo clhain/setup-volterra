@@ -68,8 +68,8 @@ jobs:
     - name: Setup Volterra
       uses: ./
       with:
-        cli_config_credentials_hostname: 'volterra.example.com'
-        cli_config_credentials_token: ${{ env.VOLTERRA_AUTH_BUNDLE }}
+        cli_config_credential_hostname: 'volterra.example.com'
+        cli_config_credential_bundle: ${{ env.VOLTERRA_AUTH_BUNDLE }}
     
     - name: Validate Volterra Credentials (Linux & macOS)
       run: |

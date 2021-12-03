@@ -11,6 +11,7 @@ const fs = require('fs').promises;
 const io = require('@actions/io');
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
+const g = require('gunzip-file');
 
 const setup = require('../lib/setup-volterra');
 
@@ -47,7 +48,7 @@ describe('Setup Volterra', () => {
       .fn()
       .mockReturnValueOnce('file.zip');
 
-    tc.extractZip = jest
+    g.gunzip = jest
       .fn()
       .mockReturnValueOnce('file');
 
@@ -196,8 +197,6 @@ describe('Setup Volterra', () => {
     const credentialsToken = 'dGVzdGluZw==';
     const wrapperPath = path.resolve([__dirname, '..', 'wrapper', 'dist', 'index.js'].join(path.sep));
 
-    const ioMv = jest.spyOn(io, 'mv')
-      .mockImplementation(() => {});
     const ioCp = jest.spyOn(io, 'cp')
       .mockImplementation(() => {});
 
@@ -212,10 +211,6 @@ describe('Setup Volterra', () => {
       .fn()
       .mockReturnValueOnce('file.zip');
 
-    tc.extractZip = jest
-      .fn()
-      .mockReturnValueOnce('file');
-
     os.platform = jest
       .fn()
       .mockReturnValue('linux');
@@ -226,7 +221,6 @@ describe('Setup Volterra', () => {
 
     await setup();
 
-    expect(ioMv).toHaveBeenCalledWith(`file${path.sep}vesctl.linux-amd64`, `file${path.sep}vesctl-bin`);
-    expect(ioCp).toHaveBeenCalledWith(wrapperPath, `file${path.sep}vesctl`);
+    expect(ioCp).toHaveBeenCalledWith(wrapperPath, './vesctl');
   });
 });

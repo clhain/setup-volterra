@@ -2,7 +2,7 @@
 
 <p align="left">
   <a href="https://github.com/hashicorp/setup-volterra/actions"><img alt="Continuous Integration" src="https://github.com/clhain/setup-volterra/workflows/Continuous%20Integration/badge.svg" /></a>
-  <a href="https://github.com/hashicorp/setup-volterra/actions"><img alt="Setup Terraform" src="https://github.com/clhain/setup-volterra/workflows/Setup%20Terraform/badge.svg" /></a>
+  <a href="https://github.com/hashicorp/setup-volterra/actions"><img alt="Setup Volterra" src="https://github.com/clhain/setup-volterra/workflows/Setup%20Volterra/badge.svg" /></a>
 </p>
 
 The `clhain/setup-volterra` action is a JavaScript action that sets up Volterra CLI (vesctl) in your GitHub Actions workflow by:
@@ -71,11 +71,9 @@ steps:
 
 The action supports the following inputs:
 
-- `cli_config_credentials_hostname` - (optional) The hostname of a Terraform Cloud/Enterprise instance to 
-   place within the credentials block of the Terraform CLI configuration file. Defaults to `app.terraform.io`.
+- `cli_config_credential_hostname` - (optional) The hostname of the volterra api endpoint. Defaults to `console.ves.volterra.io`.
 
-- `cli_config_credentials_token` - (optional) The API token for a Terraform Cloud/Enterprise instance to
-   place within the credentials block of the Terraform CLI configuration file.
+- `cli_config_credential_bundle` - (optional) A Base64 encoded Volterra API p12 bundle to use when interacting with the api.
 
 - `vesctl_version` - (optional) The version of Vesctl CLI to install. If no version is given, it will default to `latest`.
 
@@ -86,14 +84,14 @@ The action supports the following inputs:
 
 ## Outputs
 
-This action does not configure any outputs directly. However, when you set the `terraform_wrapper` input
-to `true`, the following outputs is available for subsequent steps that call the `terraform` binary.
+This action does not configure any outputs directly. However, when you set the `vesctl_wrapper` input
+to `true`, the following outputs is available for subsequent steps that call the `vesctl` binary.
 
-- `stdout` - The STDOUT stream of the call to the `terraform` binary.
+- `stdout` - The STDOUT stream of the call to the `vesctl` binary.
 
-- `stderr` - The STDERR stream of the call to the `terraform` binary.
+- `stderr` - The STDERR stream of the call to the `vesctl` binary.
 
-- `exitcode` - The exit code of the call to the `terraform` binary.
+- `exitcode` - The exit code of the call to the `vesctl` binary.
 
 ## License
 
