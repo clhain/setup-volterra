@@ -52,6 +52,9 @@ describe('Setup Volterra', () => {
       .fn()
       .mockReturnValueOnce('file');
 
+    fs.chmod = jest
+      .fn();
+
     os.platform = jest
       .fn()
       .mockReturnValue('linux');
@@ -201,6 +204,8 @@ describe('Setup Volterra', () => {
       .mockImplementation(() => {});
     const ioCp = jest.spyOn(io, 'cp')
       .mockImplementation(() => {});
+    fs.chmod = jest
+      .fn();
 
     core.getInput = jest
       .fn()
