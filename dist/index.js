@@ -40,11 +40,11 @@ function mapOS (os) {
 async function downloadCLI (url) {
   core.debug(`Downloading Volterra CLI from ${url}`);
   const pathToCLIZip = await tc.downloadTool(url);
-
+  const cliDir = path.dirname(pathToCLIZip);
+  const pathToCLI = `${cliDir}/vesctl`;
   core.debug('Extracting Volterra CLI zip file');
-  const pathToCLI = '.';
   try {
-    gunzip(pathToCLIZip, 'vesctl', () => {
+    gunzip(pathToCLIZip, pathToCLI, () => {
       core.debug('gunzip done.');
     });
   } catch (e) {
@@ -66,7 +66,7 @@ async function downloadCLI (url) {
     throw new Error(`Unable to download vesctl from ${url}`);
   }
 
-  return pathToCLI;
+  return cliDir;
 }
 
 async function installWrapper (pathToCLI, platform, arch) {
