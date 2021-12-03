@@ -197,6 +197,8 @@ describe('Setup Volterra', () => {
     const credentialsToken = 'dGVzdGluZw==';
     const wrapperPath = path.resolve([__dirname, '..', 'wrapper', 'dist', 'index.js'].join(path.sep));
 
+    const ioMv = jest.spyOn(io, 'mv')
+      .mockImplementation(() => {});
     const ioCp = jest.spyOn(io, 'cp')
       .mockImplementation(() => {});
 
@@ -221,6 +223,7 @@ describe('Setup Volterra', () => {
 
     await setup();
 
+    expect(ioMv).toHaveBeenCalledWith(`.${path.sep}vesctl`, `.${path.sep}vesctl-bin`);
     expect(ioCp).toHaveBeenCalledWith(wrapperPath, './vesctl');
   });
 });
