@@ -61,6 +61,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     env:
       VOLTERRA_AUTH_BUNDLE: 'dGVzdGluZw=='
+      VOLTERRA_AUTH_BUNDLE_PW: 'asdf'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -70,6 +71,7 @@ jobs:
       with:
         cli_config_credential_hostname: 'volterra.example.com'
         cli_config_credential_bundle: ${{ env.VOLTERRA_AUTH_BUNDLE }}
+        cli_config_credential_bundle_password: ${{ env.VOLTERRA_AUTH_BUNDLE_PW }}
     
     - name: Validate Volterra Credentials (Linux & macOS)
       run: |
