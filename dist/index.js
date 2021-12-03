@@ -53,7 +53,7 @@ async function downloadCLI (url) {
   }
 
   core.debug('Making vesctl binary executable.');
-  await fs.chmod('vesctl', 0o755, (err) => {
+  await fs.chmod(pathToCLI, 0o755, (err) => {
     if (err) {
       core.error('Unable to add execute permissions on binary.');
       throw err;
