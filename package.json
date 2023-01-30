@@ -26,7 +26,7 @@
     "gunzip-file": "^0.1.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.33.0",
+    "@vercel/ncc": "^0.36.1",
     "husky": "^6.0.0",
     "jest": "^27.4.3",
     "semistandard": "^16.0.0"
